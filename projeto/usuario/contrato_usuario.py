@@ -20,11 +20,7 @@ class CriaUsuarioParams(BaseModel):
 
 class UsuarioDBContrato(ABC):
     @abstractmethod
-    def grava(self, params: CriaUsuarioParams):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_usuario_com_endereco(self):
+    def cria(self, params: CriaUsuarioParams):
         raise NotImplementedError()
 
 

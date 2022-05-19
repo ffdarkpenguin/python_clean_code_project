@@ -2,10 +2,12 @@ from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 
 class DB_SQL():
-    def __init__(self) -> None:
+    def __init__(self, tabela: str) -> None:
         dsn = "postgres://clean_code:123123@localhost:49153"
         self.conexao_db = connect(dns=dsn, cursor_factory=RealDictCursor)
         self.conexao_db.set_session(autocommit=True)
+        self.cursor = self.conexao_db.cursor()
+        self.tabela = tabela
 
     def create(self, params):  # params é um classe especial que suporta todas as classes de dados do sistema
         dados = params.__dict__
@@ -15,7 +17,9 @@ class DB_SQL():
         return self.db.execute(query, params)
 
     def get_one(self):
-        
+        query = f"SELECT * FROM {self.tabela}"
+        ret = self.cursor.execute(query)
+        print(ret)
 
     def get_many(self):
         pass
