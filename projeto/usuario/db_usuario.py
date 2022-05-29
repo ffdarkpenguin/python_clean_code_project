@@ -25,5 +25,17 @@ class UsuarioDB(UsuarioDBContrato):
 
         query = f"INSERT INTO {self.tabela} ({campos}) VALUES ({valores}) RETURNING *"
         self.cursor.execute(query, dados)
-        return UsuarioModelo(**self.cursor.fetchone())
-        
+        return self._pega_resultado()
+
+    def consulta(self, _id: int) -> UsuarioModelo:
+        query = f"SELECT * FROM {self.tabela} WHERE id = %(id)s"
+        params = {"id": _id}
+        self.cursor.execute(query, params)
+        return self._pega_resultado()
+
+
+    def _pega_resultado(self) -> UsuarioModelo:
+        ret = self.cursor.fetchone()
+        if ret is None:
+            raise Exception("Não encontrado")
+        return UsuarioModelo(**ret) # type: ignore
