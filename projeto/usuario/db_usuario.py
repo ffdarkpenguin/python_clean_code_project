@@ -6,7 +6,7 @@ from . import contrato_usuario
 
 class UsuarioDB(contrato_usuario.UsuarioDBContrato):
     def __init__(self) -> None:
-        dsn = 'postgres://clean_code:123123@localhost:49153'
+        dsn = 'postgres://projeto:123123@postgres:5432'
         self.conexao_db = connect(dsn=dsn, cursor_factory=RealDictCursor)
         self.conexao_db.set_session(autocommit=True)
         self.cursor = self.conexao_db.cursor()
