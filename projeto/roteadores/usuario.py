@@ -20,7 +20,6 @@ def cria(params: contrato_usuario.CriaUsuarioParams):
 @roteador.get('')
 def lista(filtro: contrato_usuario.FiltroUsuario = Depends()):
     caso_uso = usuario.lista_usuario_fabrica()
-    print(filtro)
     return caso_uso.executa(filtro=filtro)
 
 

@@ -40,7 +40,6 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         params = filtro.__dict__
         where_str = self._monta_where(params)
         query = f'SELECT * FROM {self.tabela} WHERE {where_str}'
-        print(query)
         self.cursor.execute(query, params)
         return self._pega_varios()
 
