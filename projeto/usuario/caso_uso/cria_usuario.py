@@ -1,9 +1,10 @@
-from ..contrato_usuario import CriaUsuarioParams, CriaUsuarioContrato, UsuarioDBContrato, UsuarioModelo
+from .. import contrato_usuario
 from .base_usuario import UsuarioBase
 
-class CriaUsuario(CriaUsuarioContrato, UsuarioBase):
-    def __init__(self, db: UsuarioDBContrato) -> None:
+
+class CriaUsuario(contrato_usuario.CriaUsuarioContrato, UsuarioBase):
+    def __init__(self, db: contrato_usuario.UsuarioDBContrato) -> None:
         self.db = db
-        
-    def executa(self, params: CriaUsuarioParams, ) -> UsuarioModelo:
+
+    def executa(self, params: contrato_usuario.CriaUsuarioParams) -> contrato_usuario.UsuarioModelo:
         return self.db.cria(params)

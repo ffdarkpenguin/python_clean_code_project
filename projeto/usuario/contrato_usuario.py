@@ -13,12 +13,17 @@ class UsuarioModelo(BaseModel):
     alterado_em: Optional[datetime]
 
 
-class ListaUsuario(BaseModel):
-    List[UsuarioModelo]
+ListaUsuario = List[UsuarioModelo]
+
 
 class CriaUsuarioParams(BaseModel):
     nome: str
     fone: str
+
+
+class FiltroUsuario(BaseModel):
+    nome: Optional[str] = None
+    fone: Optional[str] = None
 
 
 class UsuarioDBContrato(ABC):
@@ -26,10 +31,23 @@ class UsuarioDBContrato(ABC):
         NotFound: se usuário não foi encontrado
     """
     @abstractmethod
-    def cria(self, params: CriaUsuarioParams):
+    def cria(self, params: CriaUsuarioParams) -> UsuarioModelo:
         raise NotImplementedError()
 
-    def consulta(self, _id: int):
+    @abstractmethod
+    def consulta(self, _id: int) -> UsuarioModelo:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def lista(self, filtro: FiltroUsuario) -> ListaUsuario:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def altera(self, _id: int, alteracoes: CriaUsuarioParams) -> UsuarioModelo:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def remove(self, _id: int) -> UsuarioModelo:
         raise NotImplementedError()
 
 
@@ -41,5 +59,23 @@ class CriaUsuarioContrato(ABC):
 
 class ConsultaUsuarioContrato(ABC):
     @abstractmethod
-    def executa(self, id: int):
+    def executa(self, _id: int) -> UsuarioModelo:
+        raise NotImplementedError()
+
+
+class ListaUsuarioContrato(ABC):
+    @abstractmethod
+    def executa(self, filtro: Optional[FiltroUsuario] = None) -> ListaUsuario:
+        raise NotImplementedError()
+
+
+class AlteraUsuarioContrato(ABC):
+    @abstractmethod
+    def executa(self, _id: int, alteracoes: CriaUsuarioParams) -> UsuarioModelo:
+        raise NotImplementedError()
+
+
+class RemoveUsuarioContrato(ABC):
+    @abstractmethod
+    def executa(self, _id: int) -> UsuarioModelo:
         raise NotImplementedError()
