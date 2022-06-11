@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+    app:
+        build:
+            context: .
+        volumes:
+            - "app_vol:/app"
+        hostname: projeto
+        user: 1000:100
+        ports:
+            - "8000:8000"
+
+volumes:
+    app_vol:

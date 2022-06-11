@@ -1,0 +1,30 @@
+[MASTER]
+extension-pkg-whitelist = pydantic
+
+[MESSAGE_CONTROL]
+disable =
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-method-docstring,
+    missing-function-docstring,
+    raise-missing-from,
+
+[STRING]
+check-quote-consistency = yes
+
+[DESIGN]
+min-public-methods=1
+
+
+[BASIC]
+good-names =
+    e,
+    i,
+    j,
+    k,
+    x,
+    _,
+    db,
+
+[FORMAT]
+max-line-length = 120
