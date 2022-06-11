@@ -1,0 +1,10 @@
+FROM postgres:13.7-bullseye
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y postgresql-contrib
+
+WORKDIR /docker-entrypoint-initdb.d
+
+COPY SQL/create_db.sh create_db.sh
+COPY SQL/init_db.sh init_db.sh
+COPY SQL/projeto.sql projeto_sql

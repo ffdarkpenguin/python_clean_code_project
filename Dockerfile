@@ -12,4 +12,4 @@ RUN chown 1000:100 -R /app
 
 USER 1000:100
 
-CMD [ "uvicorn", "--reload", "--host=0.0.0.0" "projeto.app:app" ]
+CMD [ "uvicorn", "--reload", "--host=0.0.0.0", "projeto.app:app" ]
