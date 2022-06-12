@@ -2,10 +2,10 @@ from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 
 from projeto.erros import NotFoundError
-from . import contrato_usuario
+from . import contrato_grupo
 
 
-class UsuarioDB(contrato_usuario.UsuarioDBContrato):
+class GrupoDB(contrato_grupo.GrupoDBContrato):
     def __init__(self) -> None:
         dsn = 'postgres://projeto:123123@postgres:5432'
         self.conexao_db = connect(dsn=dsn, cursor_factory=RealDictCursor)
@@ -15,7 +15,7 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.nome = 'Usuário'
         self.artigo = 'o'
 
-    def cria(self, params: contrato_usuario.CriaUsuarioParams) -> contrato_usuario.UsuarioModelo:
+    def cria(self, params: contrato_grupo.CriaGrupoParams) -> contrato_grupo.GrupoModelo:
         ''' faz qualquer extra e chama o super'''
         dados = params.__dict__
         campos = []
@@ -31,20 +31,20 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.cursor.execute(query, dados)
         return self._pega_um()
 
-    def consulta(self, _id: int) -> contrato_usuario.UsuarioModelo:
+    def consulta(self, _id: int) -> contrato_grupo.GrupoModelo:
         query = f'SELECT * FROM {self.tabela} WHERE id = %(id)s'
         params = {'id': _id}
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def lista(self, filtro: contrato_usuario.FiltroUsuario) -> contrato_usuario.ListaUsuario:
+    def lista(self, filtro: contrato_grupo.FiltroGrupo) -> contrato_grupo.ListaGrupo:
         params = filtro.__dict__
         where_str = self._monta_where(params)
         query = f'SELECT * FROM {self.tabela} WHERE {where_str}'
         self.cursor.execute(query, params)
         return self._pega_varios()
 
-    def altera(self, _id: int, alteracoes: contrato_usuario.CriaUsuarioParams) -> contrato_usuario.UsuarioModelo:
+    def altera(self, _id: int, alteracoes: contrato_grupo.CriaGrupoParams) -> contrato_grupo.GrupoModelo:
         params = alteracoes.__dict__
         campos = self._monta_campos_update(params)
         query = f'''
@@ -57,25 +57,25 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def remove(self, _id: int) -> contrato_usuario.UsuarioModelo:
+    def remove(self, _id: int) -> contrato_grupo.GrupoModelo:
         query = f'DELETE FROM {self.tabela} WHERE id = %(id)s RETURNING *'
         params = {'id': _id}
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def _pega_um(self) -> contrato_usuario.UsuarioModelo:
+    def _pega_um(self) -> contrato_grupo.GrupoModelo:
         ret = self.cursor.fetchone()
         if ret is None:
             raise NotFoundError('Não encontrado')
-        return contrato_usuario.UsuarioModelo(**ret)  # type: ignore
+        return contrato_grupo.GrupoModelo(**ret)  # type: ignore
 
-    def _pega_varios(self) -> contrato_usuario.ListaUsuario:
+    def _pega_varios(self) -> contrato_grupo.ListaGrupo:
         lista = self.cursor.fetchall()
         if not lista:
             raise NotFoundError('Não encontrado')
-        ret: contrato_usuario.ListaUsuario = []
+        ret: contrato_grupo.ListaGrupo = []
         for item in lista:
-            ret.append(contrato_usuario.UsuarioModelo(**item))  # type: ignore
+            ret.append(contrato_grupo.GrupoModelo(**item))  # type: ignore
 
         return ret
 
