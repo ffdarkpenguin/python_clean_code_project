@@ -1,7 +1,7 @@
 
 
 from projeto.erros import NotFoundError
-from .base_usuario import UsuarioBase
+from .base import UsuarioBase
 from ..contrato_usuario import ConsultaUsuarioContrato, UsuarioDBContrato
 
 

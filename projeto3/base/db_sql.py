@@ -1,21 +1,27 @@
+from abc import abstractmethod
+from typing import Generic, List
+
 from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 
 from projeto.erros import NotFoundError
-from . import contrato_usuario
+from projeto3.contratos.db import DB
+
+from projeto3.contratos.base import Parametros, Filtro, Modelo
 
 
-class UsuarioDB(contrato_usuario.UsuarioDBContrato):
+class DBSQL(DB, Generic[Parametros, Filtro, Modelo]):
     def __init__(self) -> None:
         dsn = 'postgres://projeto:123123@postgres:5432'
         self.conexao_db = connect(dsn=dsn, cursor_factory=RealDictCursor)
         self.conexao_db.set_session(autocommit=True)
         self.cursor = self.conexao_db.cursor()
-        self.tabela = 'usuario'
-        self.nome = 'Usuário'
-        self.artigo = 'o'
 
-    def cria(self, params: contrato_usuario.CriaUsuarioParams) -> contrato_usuario.UsuarioModelo:
+    @abstractmethod
+    def tabela(self) -> str:
+        raise NotImplementedError()
+
+    def insere(self, params: Parametros) -> Modelo:
         ''' faz qualquer extra e chama o super'''
         dados = params.__dict__
         campos = []
@@ -31,20 +37,23 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.cursor.execute(query, dados)
         return self._pega_um()
 
-    def consulta(self, _id: int) -> contrato_usuario.UsuarioModelo:
+    def insere_varios(self, params: Parametros) -> List[Modelo]:
+        return []
+
+    def pega_um(self, _id: int) -> Modelo:
         query = f'SELECT * FROM {self.tabela} WHERE id = %(id)s'
         params = {'id': _id}
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def lista(self, filtro: contrato_usuario.FiltroUsuario) -> contrato_usuario.ListaUsuario:
+    def pega_varios(self, filtro: Filtro) -> List[Modelo]:
         params = filtro.__dict__
         where_str = self._monta_where(params)
         query = f'SELECT * FROM {self.tabela} WHERE {where_str}'
         self.cursor.execute(query, params)
         return self._pega_varios()
 
-    def altera(self, _id: int, alteracoes: contrato_usuario.CriaUsuarioParams) -> contrato_usuario.UsuarioModelo:
+    def altera_um(self, _id: int, alteracoes: Parametros) -> Modelo:
         params = alteracoes.__dict__
         campos = self._monta_campos_update(params)
         query = f'''
@@ -57,25 +66,31 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def remove(self, _id: int) -> contrato_usuario.UsuarioModelo:
+    def altera_varios(self, filtro: Filtro, alteracoes: Parametros) -> List[Modelo]:
+        return []
+
+    def remove_um(self, _id: int) -> Modelo:
         query = f'DELETE FROM {self.tabela} WHERE id = %(id)s RETURNING *'
         params = {'id': _id}
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def _pega_um(self) -> contrato_usuario.UsuarioModelo:
+    def remove_varios(self, filtro: Filtro) -> List[Modelo]:
+        return []
+
+    def _pega_um(self) -> Modelo:
         ret = self.cursor.fetchone()
         if ret is None:
             raise NotFoundError('Não encontrado')
-        return contrato_usuario.UsuarioModelo(**ret)  # type: ignore
+        return Modelo(**ret)  # type: ignore
 
-    def _pega_varios(self) -> contrato_usuario.ListaUsuario:
+    def _pega_varios(self) -> List[Modelo]:
         lista = self.cursor.fetchall()
         if not lista:
             raise NotFoundError('Não encontrado')
-        ret: contrato_usuario.ListaUsuario = []
+        ret: List[Modelo] = []
         for item in lista:
-            ret.append(contrato_usuario.UsuarioModelo(**item))  # type: ignore
+            ret.append(Modelo(**item))  # type: ignore
 
         return ret
 

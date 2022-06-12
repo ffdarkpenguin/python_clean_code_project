@@ -2,10 +2,10 @@ from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 
 from projeto.erros import NotFoundError
-from . import contrato_usuario
+from .contratos import UsuarioModelo, CriaUsuarioParams, FiltroUsuario, ListaUsuario, UsuarioDBContrato
 
 
-class UsuarioDB(contrato_usuario.UsuarioDBContrato):
+class UsuarioDB(UsuarioDBContrato):
     def __init__(self) -> None:
         dsn = 'postgres://projeto:123123@postgres:5432'
         self.conexao_db = connect(dsn=dsn, cursor_factory=RealDictCursor)
@@ -15,7 +15,7 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.nome = 'Usuário'
         self.artigo = 'o'
 
-    def cria(self, params: contrato_usuario.CriaUsuarioParams) -> contrato_usuario.UsuarioModelo:
+    def cria(self, params: CriaUsuarioParams) -> UsuarioModelo:
         ''' faz qualquer extra e chama o super'''
         dados = params.__dict__
         campos = []
@@ -31,20 +31,20 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.cursor.execute(query, dados)
         return self._pega_um()
 
-    def consulta(self, _id: int) -> contrato_usuario.UsuarioModelo:
+    def consulta(self, _id: int) -> UsuarioModelo:
         query = f'SELECT * FROM {self.tabela} WHERE id = %(id)s'
         params = {'id': _id}
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def lista(self, filtro: contrato_usuario.FiltroUsuario) -> contrato_usuario.ListaUsuario:
+    def lista(self, filtro: FiltroUsuario) -> ListaUsuario:
         params = filtro.__dict__
         where_str = self._monta_where(params)
         query = f'SELECT * FROM {self.tabela} WHERE {where_str}'
         self.cursor.execute(query, params)
         return self._pega_varios()
 
-    def altera(self, _id: int, alteracoes: contrato_usuario.CriaUsuarioParams) -> contrato_usuario.UsuarioModelo:
+    def altera(self, _id: int, alteracoes: CriaUsuarioParams) -> UsuarioModelo:
         params = alteracoes.__dict__
         campos = self._monta_campos_update(params)
         query = f'''
@@ -57,25 +57,25 @@ class UsuarioDB(contrato_usuario.UsuarioDBContrato):
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def remove(self, _id: int) -> contrato_usuario.UsuarioModelo:
+    def remove(self, _id: int) -> UsuarioModelo:
         query = f'DELETE FROM {self.tabela} WHERE id = %(id)s RETURNING *'
         params = {'id': _id}
         self.cursor.execute(query, params)
         return self._pega_um()
 
-    def _pega_um(self) -> contrato_usuario.UsuarioModelo:
+    def _pega_um(self) -> UsuarioModelo:
         ret = self.cursor.fetchone()
         if ret is None:
             raise NotFoundError('Não encontrado')
-        return contrato_usuario.UsuarioModelo(**ret)  # type: ignore
+        return UsuarioModelo(**ret)  # type: ignore
 
-    def _pega_varios(self) -> contrato_usuario.ListaUsuario:
+    def _pega_varios(self) -> ListaUsuario:
         lista = self.cursor.fetchall()
         if not lista:
             raise NotFoundError('Não encontrado')
-        ret: contrato_usuario.ListaUsuario = []
+        ret: ListaUsuario = []
         for item in lista:
-            ret.append(contrato_usuario.UsuarioModelo(**item))  # type: ignore
+            ret.append(UsuarioModelo(**item))  # type: ignore
 
         return ret
 

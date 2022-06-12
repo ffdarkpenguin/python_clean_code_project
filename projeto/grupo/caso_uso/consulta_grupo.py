@@ -1,12 +1,12 @@
 
 
 from projeto.erros import NotFoundError
-from .base_usuario import UsuarioBase
-from ..contrato_usuario import ConsultaUsuarioContrato, UsuarioDBContrato
+from .base_grupo import GrupoBase
+from ..contrato_grupo import ConsultaGrupoContrato, GrupoDBContrato
 
 
-class ConsultaUsuario(ConsultaUsuarioContrato, UsuarioBase):
-    def __init__(self, db: UsuarioDBContrato) -> None:
+class ConsultaGrupo(ConsultaGrupoContrato, GrupoBase):
+    def __init__(self, db: GrupoDBContrato) -> None:
         self._db = db
 
     def executa(self, _id: int):

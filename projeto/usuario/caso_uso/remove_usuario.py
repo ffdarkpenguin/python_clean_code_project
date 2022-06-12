@@ -1,6 +1,6 @@
 
 
-from projeto.erros import NotFound
+from projeto.erros import NotFoundError
 from .base_usuario import UsuarioBase
 from .. import contrato_usuario
 
@@ -12,6 +12,6 @@ class RemoveUsuario(contrato_usuario.RemoveUsuarioContrato, UsuarioBase):
     def executa(self, _id: int) -> contrato_usuario.UsuarioModelo:
         try:
             return self._db.remove(_id=_id)
-        except NotFound:
+        except NotFoundError:
             # o que fazer? não retornar nada ou gerar um erro? R: retorna 204 (no content)
             raise Exception()
