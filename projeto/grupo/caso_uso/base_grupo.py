@@ -1,2 +1,0 @@
-class GrupoBase():
-    pass

@@ -1,15 +1,15 @@
-from projeto.usuario.caso_uso.cria_usuario import CriaUsuario
-from projeto.usuario.caso_uso.consulta_usuario import ConsultaUsuario
-from projeto.usuario.caso_uso.lista_usuario import ListaUsuario
-from projeto.usuario.caso_uso.altera_usuario import AlteraUsuario
-from projeto.usuario.caso_uso.remove_usuario import RemoveUsuario
-from projeto.usuario.db_usuario import UsuarioDB
+from projeto.entidades.usuario.casos_uso.insere import InsereUsuario
+from projeto.entidades.usuario.casos_uso.consulta import ConsultaUsuario
+from projeto.entidades.usuario.casos_uso.lista import ListaUsuario
+from projeto.entidades.usuario.casos_uso.altera import AlteraUsuario
+from projeto.entidades.usuario.casos_uso.remove import RemoveUsuario
+from projeto.entidades.usuario.db import UsuarioDB
 
 db = UsuarioDB()
 
 
 def cria_usuario_fabrica():
-    return CriaUsuario(db=db)
+    return InsereUsuario(db=db)
 
 
 def consulta_usuario_fabrica():
