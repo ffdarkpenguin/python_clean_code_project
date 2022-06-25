@@ -1,2 +1,0 @@
-class UsuarioBase():
-    pass
