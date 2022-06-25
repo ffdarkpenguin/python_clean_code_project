@@ -1,9 +1,8 @@
 from projeto.base.db_sql import DBSQL
-from projeto.entidades.usuario.parametros import UsuarioParametros, ListaFiltro
-from projeto.entidades.usuario.retorno import Usuario
+from projeto.entidades.usuario.contratos import UsuarioParametros, FiltroUsuarios, Usuario
 
 
-class UsuarioDB(DBSQL[UsuarioParametros, ListaFiltro, Usuario]):
+class UsuarioDB(DBSQL[UsuarioParametros, FiltroUsuarios, Usuario]):
     def __init__(self) -> None:
         super().__init__()
         self._tabela = 'usuario'

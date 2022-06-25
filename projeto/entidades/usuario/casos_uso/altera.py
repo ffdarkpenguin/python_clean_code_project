@@ -1,6 +1,5 @@
 from projeto.contratos.caso_uso import CasoUso
-from projeto.entidades.usuario.parametros import UsuarioParametros
-from projeto.entidades.usuario.retorno import Usuario
+from projeto.entidades.usuario.contratos import UsuarioParametros, Usuario
 from projeto.entidades.usuario.base import UsuarioBase
 from projeto.erros import NotFoundError
 
