@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Generic, List
+from typing import Callable, Generic, List
 
 from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
@@ -11,12 +11,14 @@ from projeto.contratos.base import Parametros, Filtro, Modelo
 
 
 class DBSQL(DB, Generic[Parametros, Filtro, Modelo]):
-    def __init__(self) -> None:
+    def __init__(self, modelo: Callable) -> None:
+        self.modelo = modelo
         dsn = 'postgres://projeto:123123@postgres:5432'
         self.conexao_db = connect(dsn=dsn, cursor_factory=RealDictCursor)
         self.conexao_db.set_session(autocommit=True)
         self.cursor = self.conexao_db.cursor()
 
+    @property
     @abstractmethod
     def tabela(self) -> str:
         raise NotImplementedError()
@@ -49,7 +51,10 @@ class DBSQL(DB, Generic[Parametros, Filtro, Modelo]):
     def pega_varios(self, filtro: Filtro) -> List[Modelo]:
         params = filtro.__dict__
         where_str = self._monta_where(params)
-        query = f'SELECT * FROM {self.tabela} WHERE {where_str}'
+        if where_str:
+            query = f'SELECT * FROM {self.tabela} WHERE {where_str}'
+        else:
+            query = f'SELECT * FROM {self.tabela}'
         self.cursor.execute(query, params)
         return self._pega_varios()
 
@@ -82,7 +87,8 @@ class DBSQL(DB, Generic[Parametros, Filtro, Modelo]):
         ret = self.cursor.fetchone()
         if ret is None:
             raise NotFoundError('Não encontrado')
-        return Modelo(**ret)  # type: ignore
+
+        return self.modelo(**dict(ret))
 
     def _pega_varios(self) -> List[Modelo]:
         lista = self.cursor.fetchall()
@@ -90,7 +96,7 @@ class DBSQL(DB, Generic[Parametros, Filtro, Modelo]):
             raise NotFoundError('Não encontrado')
         ret: List[Modelo] = []
         for item in lista:
-            ret.append(Modelo(**item))  # type: ignore
+            ret.append(self.modelo(**dict(item)))
 
         return ret
 
