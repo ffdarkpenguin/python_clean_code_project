@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from projeto.fabricas import usuario
-from projeto.usuario import contrato_usuario
+from projeto.entidades.usuario.contratos import UsuarioParametros, FiltroUsuarios
 
 roteador = APIRouter(
     prefix='/usuarios',
@@ -12,15 +12,15 @@ roteador = APIRouter(
 
 
 @roteador.post('')
-def cria(params: contrato_usuario.CriaUsuarioParams):
+def cria(params: UsuarioParametros):
     caso_uso = usuario.cria_usuario_fabrica()
     return caso_uso.executa(params)
 
 
 @roteador.get('')
-def lista(filtro: contrato_usuario.FiltroUsuario = Depends()):
+def lista(filtro: FiltroUsuarios = Depends()):
     caso_uso = usuario.lista_usuario_fabrica()
-    return caso_uso.executa(filtro=filtro)
+    return caso_uso.executa(filtro)
 
 
 @roteador.get('/{_id}')
@@ -30,7 +30,7 @@ def consulta(_id: int):
 
 
 @roteador.put('/{_id}')
-def altera(_id: int, alteracoes: contrato_usuario.CriaUsuarioParams):
+def altera(_id: int, alteracoes: UsuarioParametros):
     caso_uso = usuario.altera_usuario_fabrica()
     return caso_uso.executa(_id=_id, alteracoes=alteracoes)
 

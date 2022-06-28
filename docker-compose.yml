@@ -5,13 +5,13 @@ services:
         build:
             context: .
         volumes:
-            - "./:/app"
+            - ".:/home"
         hostname: projeto
         user: 1000:100
         ports:
             - "8000:8000"
         environment:
-            - PYTHONPATH=/app
+            - PYTHONPATH=/home
         depends_on:
             - postgres
     postgres:

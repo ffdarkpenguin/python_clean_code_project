@@ -1,15 +1,13 @@
 FROM python:3.9.6-slim
 
-VOLUME [ "/app" ]
-
-WORKDIR /app
+WORKDIR /home/projeto
 
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN chown 1000:100 -R /app
+RUN chown 1000:100 -R /home/projeto
 
 USER 1000:100
 
-CMD [ "uvicorn", "--reload", "--host=0.0.0.0", "projeto.app:app" ]
+CMD [ "uvicorn", "--reload", "--host=0.0.0.0", "app:app" ]

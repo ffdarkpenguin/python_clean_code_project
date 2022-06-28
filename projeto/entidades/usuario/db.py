@@ -4,8 +4,9 @@ from projeto.entidades.usuario.contratos import UsuarioParametros, FiltroUsuario
 
 class UsuarioDB(DBSQL[UsuarioParametros, FiltroUsuarios, Usuario]):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(modelo=Usuario)
         self._tabela = 'usuario'
 
+    @property
     def tabela(self) -> str:
         return self._tabela
