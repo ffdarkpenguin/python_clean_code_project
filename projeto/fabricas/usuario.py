@@ -1,9 +1,9 @@
-from projeto.entidades.usuario.casos_uso.insere import InsereUsuario
-from projeto.entidades.usuario.casos_uso.consulta import ConsultaUsuario
-from projeto.entidades.usuario.casos_uso.lista import ListaUsuario
-from projeto.entidades.usuario.casos_uso.altera import AlteraUsuario
-from projeto.entidades.usuario.casos_uso.remove import RemoveUsuario
-from projeto.entidades.usuario.db import UsuarioDB
+from projeto.casos_uso.usuario.insere import InsereUsuario
+from projeto.casos_uso.usuario.consulta import ConsultaUsuario
+from projeto.casos_uso.usuario.lista import ListaUsuario
+from projeto.casos_uso.usuario.altera import AlteraUsuario
+from projeto.casos_uso.usuario.remove import RemoveUsuario
+from projeto.dbs.db_usuario import UsuarioDB
 
 db = UsuarioDB()
 

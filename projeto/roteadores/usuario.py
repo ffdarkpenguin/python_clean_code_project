@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends
 
 from projeto.fabricas import usuario
-from projeto.entidades.usuario.contratos import UsuarioParametros, FiltroUsuarios
+from projeto.contratos.usuario import UsuarioParametros, FiltroUsuarios, UsuarioUpdateParametros
+from projeto.erros import UseCaseError
 
 roteador = APIRouter(
     prefix='/usuarios',
@@ -31,11 +32,18 @@ def consulta(_id: int):
 
 @roteador.put('/{_id}')
 def altera(_id: int, alteracoes: UsuarioParametros):
+    parametros = UsuarioUpdateParametros(id=_id, **alteracoes.dict())
     caso_uso = usuario.altera_usuario_fabrica()
-    return caso_uso.executa(_id=_id, alteracoes=alteracoes)
+    try:
+        return caso_uso.executa(params=parametros)
+    except UseCaseError as e:
+        return str(e)
 
 
 @roteador.delete('/{_id}')
 def remove(_id: int):
     caso_uso = usuario.remove_usuario_fabrica()
-    return caso_uso.executa(_id=_id)
+    try:
+        return caso_uso.executa(_id)
+    except UseCaseError as e:
+        return str(e)
