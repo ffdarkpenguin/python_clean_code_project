@@ -1,4 +1,4 @@
-from projeto.entidades.usuario.db import UsuarioDB
+from projeto.dbs.db_usuario import UsuarioDB
 
 
 class UsuarioBase():

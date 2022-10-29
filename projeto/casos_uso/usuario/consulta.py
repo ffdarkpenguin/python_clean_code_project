@@ -1,12 +1,11 @@
 from fastapi import HTTPException
 
 from projeto.erros import NotFoundError
-from projeto.contratos.caso_uso import CasoUso
-from projeto.entidades.usuario.contratos import Usuario
-from projeto.entidades.usuario.base import UsuarioBase
+from projeto.contratos.usuario import Usuario
+from .base import UsuarioBase
 
 
-class ConsultaUsuario(UsuarioBase, CasoUso[int, Usuario]):
+class ConsultaUsuario(UsuarioBase):
     def executa(self, _id: int) -> Usuario:
         try:
             return self._db.pega_um(_id=_id)
