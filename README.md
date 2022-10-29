@@ -1,2 +1,2 @@
-# python_clean_code_project
-A simple project in Python Using clean code
+# Python Clean Code
+Um projeto modelo simples usando clean code escrito em Python
